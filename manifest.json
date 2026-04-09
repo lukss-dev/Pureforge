@@ -1,0 +1,24 @@
+{
+  "name": "PureForge",
+  "short_name": "PureForge",
+  "description": "Cada dia limpo é uma vitória.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#f07c1e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "iconpureforge.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "iconpureforge.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

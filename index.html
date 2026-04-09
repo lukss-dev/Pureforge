@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PureForge</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f07c1e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PureForge" />
+  <link rel="apple-touch-icon" href="iconpureforge.png" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="home-content">
+      <img src="iconpureforge.png" class="app-icon" alt="PureForge" />
+      <h1 class="home-title">PUREFORGE</h1>
+      <p class="home-subtitle">CADA DIA LIMPO É UMA VITÓRIA.</p>
+
+      <div class="streak-circle">
+        <span class="streak-number" id="streak-count">0</span>
+        <span class="streak-label">DIAS LIVRES</span>
+      </div>
+
+      <div class="streak-tabs">
+        <button class="streak-tab active" id="tab-forja">FORJA</button>
+        <button class="streak-tab" id="tab-resistencia">RESISTÊNCIA</button>
+      </div>
+      <div class="streak-bar-wrap">
+        <div class="streak-bar" id="streak-bar" style="width:0%"></div>
+      </div>
+
+      <div class="record-badge">RECORDE <span id="record-count">0</span> DIAS</div>
+
+      <button class="btn-emergency" onclick="navigate('emergency')">🛡️ MODO EMERGÊNCIA</button>
+      <button class="btn-secondary" onclick="navigate('radar')">📡 REGISTRADOR GATILHO</button>
+      <button class="btn-outline" onclick="showFallModal()">⚠️ REGISTRADOR QUEDA</button>
+
+      <p class="verse-home" id="home-verse">"Vigiai e orai, para que não entreis em tentação." - Mateus 26:41</p>
+    </div>
+  </div>
+
+  <!-- EMERGENCY -->
+  <div id="screen-emergency" class="screen">
+    <div class="back-btn" onclick="navigate('home')">← VOLTAR</div>
+    <div class="emergency-content">
+      <div class="emergency-icon">🛡️</div>
+      <h2 class="emergency-title" id="emergency-msg">FOGE DA IMORALIDADE. AGORA.</h2>
+      <p class="emergency-sub" id="emergency-sub">Saia do lugar onde você está. AGORA.</p>
+    </div>
+    <div class="emergency-bottom">
+      <button class="btn-pray" onclick="navigate('espiritual')">❤️ ORAR AGORA</button>
+      <button class="btn-next-msg" onclick="nextEmergencyMsg()">PRÓXIMA MENSAGEM</button>
+    </div>
+  </div>
+
+  <!-- RADAR -->
+  <div id="screen-radar" class="screen">
+    <div class="screen-header">
+      <span class="header-icon">📡</span>
+      <div><h2 class="screen-title">RADAR DE GATILHOS</h2><p class="screen-sub">CONHEÇA SEUS PADRÕES</p></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><span class="stat-num" id="stat-registros">0</span><span class="stat-lbl">REGISTROS</span></div>
+      <div class="stat-card orange"><span class="stat-num" id="stat-tentativas">0</span><span class="stat-lbl">TENTATIVAS</span></div>
+      <div class="stat-card red"><span class="stat-num" id="stat-quedas">0</span><span class="stat-lbl">QUEDAS</span></div>
+    </div>
+    <div class="section-title">⚡ PERCEPÇÕES</div>
+    <div id="percepcoes-list" class="percepcoes-list"></div>
+    <div class="section-title">📈 PADRÕES DETECTADOS</div>
+    <div id="padroes-list" class="padroes-list"></div>
+    <div class="section-title">🕐 REGISTROS RECENTES</div>
+    <div id="recentes-list" class="recentes-list"></div>
+    <button class="btn-add" onclick="showTriggerModal()">+ REGISTRAR GATILHO</button>
+  </div>
+
+  <!-- DEVOCIONAL -->
+  <div id="screen-devocional" class="screen">
+    <div class="screen-header">
+      <span class="header-icon">📖</span>
+      <div><h2 class="screen-title">PEÇAS DEVOCIONAIS</h2><p class="screen-sub">TREINAMENTO ESPIRITUAL</p></div>
+    </div>
+    <div id="active-plan-view" style="display:none">
+      <div class="active-plan-card">
+        <div class="plan-status-label">PLANO ATIVO</div>
+        <div class="plan-title-row">
+          <h3 id="active-plan-name"></h3><span>🔥</span>
+        </div>
+        <p id="active-plan-tags" class="plan-tags-small"></p>
+        <div class="plan-progress-row">
+          <span id="active-plan-progress-text">0 DE 10 DIAS</span>
+          <span id="active-plan-pct">0%</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="active-plan-bar" style="width:0%"></div></div>
+      </div>
+      <div class="section-title">SEUS DIAS</div>
+      <div id="days-list" class="days-list"></div>
+      <button class="btn-abandon" onclick="abandonPlan()">ABANDONAR PLANO</button>
+    </div>
+    <div id="plan-selection-view">
+      <p class="plan-intro">Escolha um plano devocional. Você só pode ter um plano ativo por vez.</p>
+      <div id="plans-list" class="plans-list"></div>
+    </div>
+  </div>
+
+  <!-- DAY DETAIL -->
+  <div id="screen-day-detail" class="screen">
+    <div class="back-btn" onclick="navigate('devocional')">← VOLTAR</div>
+    <div class="day-detail-content">
+      <div class="day-detail-num" id="day-detail-num">DIA 1</div>
+      <h2 class="day-detail-title" id="day-detail-title"></h2>
+      <p class="day-detail-text" id="day-detail-text"></p>
+      <div class="day-detail-verse" id="day-detail-verse"></div>
+      <button class="btn-emergency" id="btn-complete-day" onclick="completeDay()">✅ CONCLUIR DIA</button>
+    </div>
+  </div>
+
+  <!-- ESPIRITUAL -->
+  <div id="screen-espiritual" class="screen">
+    <div class="screen-header">
+      <span class="header-icon">📖</span>
+      <div><h2 class="screen-title">ESPIRITUAL</h2><p class="screen-sub">ARMAS DO COMBATE</p></div>
+    </div>
+    <button class="btn-pray full-pray" onclick="showPrayModal()">❤️ ORAR AGORA</button>
+    <div class="section-title">VERSÍCULOS DE COMBATE</div>
+    <div id="verses-list" class="verses-list"></div>
+    <div class="section-title">ORAÇÕES GUIADAS</div>
+    <div id="prayers-list" class="prayers-list"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="navigate('home')" id="nav-home">
+      <span class="nav-icon"><img src="iconpureforge.png" style="width:22px;height:22px;border-radius:5px;object-fit:cover" /></span>
+      <span class="nav-label">INÍCIO</span>
+    </button>
+    <button class="nav-item" onclick="navigate('radar')" id="nav-radar">
+      <span class="nav-icon">📡</span><span class="nav-label">RADAR</span>
+    </button>
+    <button class="nav-item" onclick="navigate('emergency')" id="nav-emergency">
+      <span class="nav-icon">🛡️</span><span class="nav-label">EMERGÊNCIA</span>
+    </button>
+    <button class="nav-item" onclick="navigate('devocional')" id="nav-devocional">
+      <span class="nav-icon">📋</span><span class="nav-label">DEVOCIONAL</span>
+    </button>
+    <button class="nav-item" onclick="navigate('espiritual')" id="nav-espiritual">
+      <span class="nav-icon">📖</span><span class="nav-label">ESPIRITUAL</span>
+    </button>
+  </nav>
+
+  <!-- MODAL TRIGGER -->
+  <div id="modal-trigger" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h3 class="modal-title">REGISTRAR GATILHO</h3>
+      <label class="modal-label">Emoção</label>
+      <select id="trigger-emotion" class="modal-input">
+        <option value="tédio">Tédio</option>
+        <option value="estresse">Estresse</option>
+        <option value="solidão">Solidão</option>
+        <option value="ansiedade">Ansiedade</option>
+        <option value="tristeza">Tristeza</option>
+        <option value="raiva">Raiva</option>
+      </select>
+      <label class="modal-label">Local</label>
+      <input id="trigger-location" class="modal-input" placeholder="Ex: quarto, escola..." />
+      <label class="modal-label">Horário</label>
+      <select id="trigger-time" class="modal-input">
+        <option value="manhã">Manhã (6h-12h)</option>
+        <option value="tarde">Tarde (12h-18h)</option>
+        <option value="noite">Noite (18h-24h)</option>
+        <option value="madrugada">Madrugada (0h-6h)</option>
+      </select>
+      <label class="modal-label">Tipo</label>
+      <select id="trigger-type" class="modal-input">
+        <option value="TENTAÇÃO">Tentação</option>
+        <option value="QUEDA">Queda</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeTriggerModal()">CANCELAR</button>
+        <button class="btn-emergency" onclick="saveTrigger()">SALVAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FALL -->
+  <div id="modal-fall" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h3 class="modal-title">REGISTRAR QUEDA</h3>
+      <p class="modal-desc">Isso não é o fim. Registrar é o primeiro passo para se levantar.</p>
+      <label class="modal-label">O que aconteceu?</label>
+      <textarea id="fall-note" class="modal-input" rows="4" placeholder="Opcional..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeFallModal()">CANCELAR</button>
+        <button class="btn-red" onclick="saveFall()">REGISTRAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PRAY -->
+  <div id="modal-pray" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h3 class="modal-title" id="pray-title">ORAÇÃO</h3>
+      <p class="modal-desc" id="pray-text"></p>
+      <button class="btn-emergency" onclick="closePrayModal()">AMÉM 🙏</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
